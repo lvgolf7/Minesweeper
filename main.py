@@ -11,7 +11,7 @@ BG = (169, 169, 169)  # Dark grey
 MINES = 60
 GAME_LOST = False
 MINE_IMAGE = pygame.transform.scale(
-    pygame.image.load("mine.jpg"), (TILE_SIZE, TILE_SIZE)
+    pygame.image.load("mine.png"), (TILE_SIZE, TILE_SIZE)
 )
 FLAG_IMAGE = pygame.transform.scale(
     pygame.image.load("flag.png"), (TILE_SIZE, TILE_SIZE)
@@ -182,7 +182,7 @@ def check_if_won():
 
 
 def game_over_screen():
-    global GAME_LOST
+    global GAME_LOST, running
     if GAME_LOST:
         font = pygame.font.Font(None, 74)
         text = font.render("Game Over", True, (255, 0, 0))
@@ -212,7 +212,8 @@ def game_over_screen():
     for key in pygame.event.get():
         if key.type == pygame.KEYDOWN:
             reset_game()
-
+        if key.type == pygame.QUIT:
+                running = False
 
 def main():
     global clock, screen, coordinates, elapsed_time, start_time
