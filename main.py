@@ -7,6 +7,7 @@ pygame.init()
 SCREEN_WIDTH = 750
 SCREEN_HEIGHT = 750
 TILE_SIZE = 25
+TILE_COLOR = [(17,51,130), (79,95,130)]
 BG = (169, 169, 169)  # Dark grey
 MINES = 60
 GAME_LOST = False
@@ -57,9 +58,10 @@ pygame.display.set_icon(MINE_IMAGE)
 
 
 class Tile:
-    def __init__(self, x, y):
+    def __init__(self, x, y, color_code):
         self.x = x
         self.y = y
+        self.color_code = color_code
         self.is_mine = False
         self.is_revealed = False
         self.value = 0
@@ -115,7 +117,8 @@ def draw_grid():
             elif tile.flagged:
                 screen.blit(FLAG_IMAGE, (x, y))
             else:
-                pygame.draw.rect(screen, (100, 100, 100), rect, 1)
+                pygame.draw.rect(screen, tile.color_code, rect, 0)
+            pygame.draw.rect(screen, (100, 100, 100), rect, 1)
 
 
 def clear_nearby_tiles(tile):
@@ -166,7 +169,8 @@ def reset_game():
     coordinates = []
     for x in range(0, SCREEN_WIDTH, TILE_SIZE):
         for y in range(50, SCREEN_HEIGHT, TILE_SIZE):
-            coordinates.append(Tile(x, y))
+            color = TILE_COLOR[(x // TILE_SIZE + y // TILE_SIZE) % len(TILE_COLOR)]
+            coordinates.append(Tile(x, y, color))
     set_mines()
     clock = pygame.time.Clock()
     elapsed_time = 0
@@ -205,7 +209,7 @@ def game_over_screen():
             ),
         )
     font = pygame.font.Font(None, 36)
-    text = font.render("Press any key to restart", True, ("black"))
+    text = font.render("Press any key to restart", True, ("white"))
     screen.blit(
         text, (SCREEN_WIDTH // 2 - text.get_width() // 2, SCREEN_HEIGHT // 2 + 40)
     )
@@ -237,7 +241,7 @@ def main():
 
         font = pygame.font.Font(None, 36)
 
-        text = font.render(f"Time Elapsed: {elapsed_time}s", True, ("black"))
+        text = font.render(f"Time Elapsed: {elapsed_time//60}m {elapsed_time%60:02d}s", True, ("black"))
         screen.blit(text, (10, 10))
         pygame.display.flip()
 
